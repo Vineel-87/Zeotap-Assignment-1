@@ -1,4 +1,4 @@
-# 📝 Google Sheets Clone  
+# 📝 Web Application Mimicking Google Sheets 
 <!-- Project title with an icon to make it visually appealing -->
 
 ## 📌 Project Overview  

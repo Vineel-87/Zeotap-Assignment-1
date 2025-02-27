@@ -1,0 +1,89 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const spreadsheet = document.getElementById("spreadsheet");
+    const formulaBar = document.getElementById("formula-bar");
+
+    // Create a 10x20 spreadsheet
+    let rows = 20, cols = 10;
+    let cells = {}; // Store cell data
+
+    for (let r = 1; r <= rows; r++) {
+        for (let c = 1; c <= cols; c++) {
+            let cell = document.createElement("div");
+            let cellId = `${String.fromCharCode(64 + c)}${r}`; // A1, B2, etc.
+            cell.classList.add("cell");
+            cell.setAttribute("contenteditable", "true");
+            cell.setAttribute("id", cellId);
+
+            // Handle input and formulas
+            cell.addEventListener("input", function () {
+                cells[cellId] = cell.innerText; // Store value
+                updateFormulas(); // Recalculate formulas
+            });
+
+            spreadsheet.appendChild(cell);
+        }
+    }
+
+    // Function to update formula calculations
+    function updateFormulas() {
+        Object.keys(cells).forEach(cellId => {
+            let cell = document.getElementById(cellId);
+            let value = cells[cellId];
+
+            if (value.startsWith("=")) {
+                try {
+                    let formula = value.substring(1).toUpperCase(); // Remove '='
+                    
+                    if (formula.includes("SUM")) {
+                        let range = getRange(formula);
+                        cell.innerText = sumCells(range);
+                    } else if (formula.includes("AVERAGE")) {
+                        let range = getRange(formula);
+                        cell.innerText = averageCells(range);
+                    } else {
+                        cell.innerText = eval(formula); // Basic calculation
+                    }
+                } catch (error) {
+                    cell.innerText = "ERROR";
+                }
+            }
+        });
+    }
+
+    // Function to extract range (e.g., A1:A5)
+    function getRange(formula) {
+        let match = formula.match(/[A-Z]\d+:[A-Z]\d+/);
+        return match ? match[0].split(":") : [];
+    }
+
+    // Function to calculate SUM
+    function sumCells(range) {
+        let [start, end] = range;
+        let startRow = parseInt(start.match(/\d+/)[0]);
+        let endRow = parseInt(end.match(/\d+/)[0]);
+        let col = start[0];
+
+        let sum = 0;
+        for (let i = startRow; i <= endRow; i++) {
+            let cellValue = parseFloat(cells[`${col}${i}`]) || 0;
+            sum += cellValue;
+        }
+        return sum;
+    }
+
+    // Function to calculate AVERAGE
+    function averageCells(range) {
+        let sum = sumCells(range);
+        let count = range.length;
+        return count ? sum / count : 0;
+    }
+
+    // Formatting Functions
+    window.boldText = function () {
+        document.activeElement.style.fontWeight = "bold";
+    };
+
+    window.italicText = function () {
+        document.activeElement.style.fontStyle = "italic";
+    };
+});

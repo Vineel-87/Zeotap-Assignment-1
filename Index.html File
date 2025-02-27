@@ -1,0 +1,24 @@
+#html File - Web Application for UI phase on Google Sheet
+# Involve css-----
+#Involve JavaScript - React Js.
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sheets Clone</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="boldText()">B</button>
+        <button onclick="italicText()">I</button>
+        <input type="text" id="formula-bar" placeholder="Enter formula (e.g., =SUM(A1:A5))">
+    </div>
+    <div id="spreadsheet"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
